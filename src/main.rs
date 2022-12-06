@@ -4,10 +4,13 @@
 #![no_std]
 #![no_main]
 
+use embedded_hal::prelude::_embedded_hal_watchdog_WatchdogDisable;
+use embedded_time::rate::Extensions;
+use esp32c3_hal::system::SystemExt;
 use esp32c3_hal::{
     clock::ClockControl,
     pac,
-    prelude::*,
+    pac::Peripherals,
     pulse_control::ClockSource,
     timer::TimerGroup,
     utils::{smartLedAdapter, SmartLedsAdapter},
@@ -15,6 +18,11 @@ use esp32c3_hal::{
 };
 use esp_backtrace as _;
 use esp_println::println;
+use lc::animations::{Animatable, Animation};
+use lc::utility::default_translation_array;
+use lc::{default_animations, LightingController, LogicalStrip};
+use lighting_controller as lc;
+use rgb::RGB8;
 use riscv_rt::entry;
 use smart_leds::{brightness, colors::*, gamma, SmartLedsWrite};
 
@@ -27,7 +35,7 @@ fn main() -> ! {
     let mut rtc = Rtc::new(peripherals.RTC_CNTL);
     let timer_group0 = TimerGroup::new(peripherals.TIMG0, &clocks);
     let mut wdt0 = timer_group0.wdt;
-    let io = IO::new(peripherals.GPIO, peripherals.IO_MUX);
+    let mut io = IO::new(peripherals.GPIO, peripherals.IO_MUX);
 
     // Disable watchdogs
     rtc.swd.disable();
@@ -47,34 +55,36 @@ fn main() -> ! {
 
     // We use one of the RMT channels to instantiate a `SmartLedsAdapter` which can
     // be used directly with all `smart_led` implementations
-    let mut led = <smartLedAdapter!(1)>::new(pulse.channel0, io.pins.gpio8);
+    // 16 is the number of LEDs in the smartLedAdapter.
+    let mut led = <smartLedAdapter!(4)>::new(pulse.channel0, io.pins.gpio9);
 
     // Initialize the Delay peripheral, and use it to toggle the LED state in a
     // loop.
     let mut delay = Delay::new(&clocks);
 
-    let setup_color = [RED];
-    let stretch_color = [GREEN];
-    let blink_color = [BLACK];
+    const NUM_LEDS: usize = 4;
+
+    let frame_rate = 60.Hz();
+    let mut color_buffer: [RGB8; NUM_LEDS] = [CYAN; NUM_LEDS];
+    color_buffer[1] = RED;
+    color_buffer[2] = BLUE;
+    color_buffer[3] = PURPLE;
+
+    let ls = LogicalStrip::new(&mut color_buffer);
+    let translation_array: [usize; NUM_LEDS] = default_translation_array(0);
+    let animation =
+        &mut Animation::new(default_animations::ANI_TEST, translation_array, frame_rate);
+    let animation_array: [&mut dyn Animatable; 1] = [animation];
+    let mut lc = LightingController::new(ls, animation_array, frame_rate);
 
     println!("Debug printing enabled.");
 
     loop {
-        for _ in 0..3 {
-            led.write(brightness(gamma(setup_color.iter().cloned()), 30))
-                .unwrap();
-            delay.delay_ms(4_750u16);
-            led.write(brightness(gamma(blink_color.iter().cloned()), 30))
-                .unwrap();
-            delay.delay_ms(250u16);
-        }
-        for _ in 0..6 {
-            led.write(brightness(gamma(stretch_color.iter().cloned()), 30))
-                .unwrap();
-            delay.delay_ms(9_750u16);
-            led.write(brightness(gamma(blink_color.iter().cloned()), 30))
-                .unwrap();
-            delay.delay_ms(250u16);
-        }
+        // need to add time limiter, will do later
+        // lc.update();
+        // println!("{:?}", lc.logical_strip.color_buffer.iter().copied());
+        // TODO: Figure out why led.write breaks when using more than 1 LED.
+        led.write(brightness(gamma(color_buffer.iter().copied()), 100))
+            .unwrap();
     }
 }
