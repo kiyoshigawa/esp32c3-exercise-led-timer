@@ -84,6 +84,7 @@ fn main() -> ! {
         // lc.update();
         // println!("{:?}", lc.logical_strip.color_buffer.iter().copied());
         // TODO: Figure out why led.write breaks when using more than 1 LED.
+        // TODO: Investigate line 480 of pulse_control.rs - looks like it may be behind this.
         led.write(brightness(gamma(color_buffer.iter().copied()), 100))
             .unwrap();
     }
