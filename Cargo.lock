@@ -127,12 +127,12 @@ dependencies = [
 
 [[package]]
 name = "esp-backtrace"
-version = "0.2.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1cc04e4a62fe7905eab18e12715feaded6cb51a5a878a0c067bbe29436bad96a"
+checksum = "1834d20d58dc6baaf063924cb3ffa0b7f6388a593bae310c9f228c4bd47f0dde"
 dependencies = [
- "esp-println 0.2.2",
- "riscv 0.8.0",
+ "esp-println",
+ "riscv 0.10.0",
 ]
 
 [[package]]
@@ -144,6 +144,7 @@ dependencies = [
  "embedded-dma",
  "embedded-hal 0.2.7",
  "esp-hal-procmacros",
+ "esp-println",
  "esp32c3",
  "fugit",
  "nb 1.0.0",
@@ -167,12 +168,6 @@ dependencies = [
 
 [[package]]
 name = "esp-println"
-version = "0.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dab33baae57ce7c0869c32885ff136f9c8405e0c201d039ccd767c3e7f79502b"
-
-[[package]]
-name = "esp-println"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "61434785da602a7838c360031628ac3cd0bd9e3412b618f2af000050541778ec"
@@ -185,7 +180,7 @@ checksum = "677b6cc003e2f7384c5bd02286e5ee04d9ac0adc875abff6c3316175af20eaa8"
 dependencies = [
  "critical-section",
  "riscv 0.10.0",
- "riscv-rt 0.10.0",
+ "riscv-rt",
  "vcell",
 ]
 
@@ -198,7 +193,7 @@ dependencies = [
  "esp-hal-common",
  "r0",
  "riscv 0.10.0",
- "riscv-rt 0.10.0",
+ "riscv-rt",
 ]
 
 [[package]]
@@ -210,13 +205,14 @@ dependencies = [
  "embedded-time",
  "esp-backtrace",
  "esp-hal-common",
- "esp-println 0.3.0",
+ "esp-println",
  "esp32c3-hal",
+ "fugit",
  "lighting_controller",
  "r0",
  "rgb",
- "riscv 0.8.0",
- "riscv-rt 0.9.0",
+ "riscv 0.10.0",
+ "riscv-rt",
  "smart-leds",
 ]
 
@@ -433,17 +429,6 @@ dependencies = [
 
 [[package]]
 name = "riscv"
-version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e2856a701069e2d262b264750d382407d272d5527f7a51d3777d1805b4e2d3c"
-dependencies = [
- "bare-metal",
- "bit_field",
- "embedded-hal 0.2.7",
-]
-
-[[package]]
-name = "riscv"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73fc4bc7113424814738fe79755a5764e392b3d4d1bc757e6aa6f61cede32095"
@@ -471,19 +456,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8149334f67011146f603c58b63f5b370ae71eb9700988fde89a6d5a6cd5987ea"
 dependencies = [
  "riscv 0.10.0",
- "riscv-rt 0.10.0",
- "riscv-target",
-]
-
-[[package]]
-name = "riscv-rt"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "527ddfacbbfeed89256163c2655b0392c4aa76dd95c0189dc05044bf2c47c3f8"
-dependencies = [
- "r0",
- "riscv 0.8.0",
- "riscv-rt-macros",
+ "riscv-rt",
  "riscv-target",
 ]
 
