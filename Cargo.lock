@@ -185,19 +185,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "esp32c3-hal"
-version = "0.3.0"
-dependencies = [
- "cfg-if",
- "embedded-hal 0.2.7",
- "esp-hal-common",
- "r0",
- "riscv 0.10.0",
- "riscv-rt",
-]
-
-[[package]]
-name = "esp32c3-scaffold"
+name = "esp32c3-exercise-led-timer"
 version = "0.1.0"
 dependencies = [
  "embedded-hal 0.2.7",
@@ -214,6 +202,18 @@ dependencies = [
  "riscv 0.10.0",
  "riscv-rt",
  "smart-leds",
+]
+
+[[package]]
+name = "esp32c3-hal"
+version = "0.3.0"
+dependencies = [
+ "cfg-if",
+ "embedded-hal 0.2.7",
+ "esp-hal-common",
+ "r0",
+ "riscv 0.10.0",
+ "riscv-rt",
 ]
 
 [[package]]
